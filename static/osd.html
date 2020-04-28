@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        JavaScript | Sending JSON data to server.
+    </title>
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+
+    <!-- Load d3-cloud -->
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <style>
+        .html {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .collapsible {
+            cursor: pointer;
+            width: 100%;
+            text-align: left
+        }
+
+        .card button.active,
+        .card .collapsible:hover {
+            background-color: #DCDCDC;
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        input,
+        select {
+            width: 150px;
+            height: 25px;
+            margin: 0 auto;
+            border: none;
+            border-radius: 4px;
+        }
+
+        input.txt1:focus {
+            outline: none !important;
+            border: 1px solid red;
+        }
+
+        button {
+            background-color: #F3F3F3;
+            border: black;
+            color: black;
+            width: 60px;
+            padding: 10px 10px;
+            border-radius: 3px;
+            font-size: 20px;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        button.btn {
+            background-color: #F0F0F0;
+            border: black;
+            color: black;
+            width: 60px;
+            padding: 10px 10px;
+            border-radius: 3px;
+            font-size: 14px;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .card {
+            border-radius: 5px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+
+
+        /*Container overrides the properties of button, even though <button class="container">*/
+
+        .container {
+            display: flex;
+            width: 100%;
+            padding: 0px 0px;
+            background-color: #ECECEC;
+        }
+
+        .card .container div {
+            margin: auto;
+            width: 88%;
+        }
+
+        .card .container div p {
+            margin-bottom: -30px;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 100%;
+            margin-top: 35px;
+        }
+
+        .card .container .para img {
+            object-fit: cover;
+            display: block;
+            margin: auto;
+            width: 50px;
+            height: 50px;
+        }
+
+        .card .container div h4 {
+            margin-top: -25px;
+            margin-bottom: -33px;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .para {
+            width: 12%;
+        }
+
+        /*Content*/
+
+        .content {
+            /*padding: 0 18px;*/
+            display: none;
+            overflow: hidden;
+            background-color: #ECECEC;
+            width: 100%;
+            padding: 0px 0px 5px 0px;
+        }
+
+        .card .content div {
+            width: 88%;
+            margin: auto;
+        }
+
+        .card .content .para img {
+            object-fit: cover;
+            width: 50px;
+            height: 50px;
+            margin-left: 12.8px;
+            margin-right: 12.8px;
+            display: block;
+        }
+
+        .card .content div p {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 90%;
+            margin-top: 3px;
+            margin-left: 0px;
+            margin-bottom: 0px;
+        }
+
+        .card .content div h4 {
+            font-family: "Times New Roman", Times, serif;
+            margin-bottom: 0px;
+            margin-top: 13px;
+            margin-left: 0px;
+        }
+
+        /*Button*/
+
+        .visited {
+            background-color: #555555;
+            color: white
+        }
+
+        button.green:hover {
+            background-color: green;
+            color: #ffffff
+        }
+
+
+        /*select*/
+
+        select {
+            text-align: center;
+            text-align-last: center;
+            /* webkit*/
+        }
+
+        option {
+            text-align: center;
+            /* reset to left*/
+        }
+
+        [data-tab-content] {
+            display: none;
+        }
+
+        .active[data-tab-content] {
+            display: block;
+        }
+
+        /*load more functionality*/
+
+        .card2 a {
+            display: block;
+            color: #000000;
+            text-decoration: none
+        }
+
+        .contain a {
+            display: block;
+            color: #000000;
+            text-decoration: none
+        }
+
+        .card2 {
+            border-radius: 10px;
+            text-align: center;
+            border: 0.5px solid grey;
+            background-color: #F3F3F3;
+            width: 25%;
+            margin-left: 5px;
+        }
+
+        .contain a:hover {
+            color: #000000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+        .card2 a:hover {
+            color: #000000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .seconddiv .card2 img,
+        .thirddiv .card2 img {
+            object-fit: cover;
+            width: 100%;
+            height: 150px;
+            display: block;
+            margin: auto;
+            border-radius: 5px;
+        }
+
+        .container2 {
+            padding: 2px 0.5px;
+        }
+
+        .seconddiv,
+        .thirddiv {
+            width: 100%;
+            display: flex
+        }
+
+        .firstdiv {
+            width: 100%;
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .result {
+            width: 100%;
+        }
+
+        .firstdiv .contain {
+            /* Maximum width */
+            position: relative;
+            margin-left: 10px;
+            max-width: 55%;
+            /* Center it */
+        }
+
+        .firstdiv .wordcloud {
+            width: 40%;
+            margin-left: 50px;
+            background-color: #F3F3F3
+        }
+
+        .firstdiv .contain img {
+            object-fit: cover;
+        }
+
+        .firstdiv .contain .contnt {
+            position: absolute;
+            /* Position the background text */
+            bottom: 0;
+            /* At the bottom. Use top:0 to append it to the top */
+            /* Fallback color */
+            background: rgba(0, 0, 0, 0.5);
+            /* Black background with 0.5 opacity */
+            color: #f1f1f1;
+            /* Grey text */
+            width: 109%;
+            /* Full width */
+            padding: 0px;
+            height: 98px;
+            text-align: center;
+            margin-bottom: 0px;
+            /* Some padding */
+        }
+
+        .firstdiv .contain .contnt p {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 80%;
+            margin-top: 5px;
+            margin-bottom: 0px;
+            margin-left: auto;
+            margin-right: 0px;
+        }
+
+        .firstdiv .contain .contnt h1 {
+            font-size: 110%;
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+
+        .navbar-fixed-top {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+        }
+    </style>
+
+</head>
+
+<body id="body" style="display: flex;">
+    <div style="width:200px;margin-left:50px;margin-right:50px">
+        <nav class="navbar-fixed-top">
+            <button data-tab-target="#Google" onclick=funcactive1(this) id="gbtn" class="green visited" style='margin: 10px 0px 0px 12.5px; width: 175px; height:50px;padding: 10px 10px;'>Google News</button>
+            <button data-tab-target="#Search" onclick=funcactive2(this) class="green" style='margin: 0px 0px 0px 12.5px; width: 175px;height:50px;padding: 10px 10px;'>Search</button>
+        </nav>
+    </div>
+
+    <div style="width:800px;" class="tab-content">
+        <div id="Google" style="background-color: white" class="active" data-tab-content>
+            <div class="firstdiv">
+                <div class='contain'>
+                    <a target='_blank' id="anc" href="">
+                        <img src='' onerror="this.src='https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif'" name='slide' width='480' height='280'>
+                        <div class='contnt'>
+                            <h1 id='hhh'></h1>
+                            <p id='ppp'></p>
+                        </div>
+                    </a>
+                </div>
+                <div class="wordcloud">
+                    <div id="wordcloudd3"></div>
+                </div>
+            </div>
+            <h2 align="center">CNN</h2>
+            <hr style="border-top: dotted 1px;" />
+            <div class="seconddiv"></div>
+            <br/>
+            <h2 align="center">Fox News</h2>
+            <hr style="border-top: dotted 1px;" />
+            <div class="thirddiv"></div>
+
+        </div>
+        <div id="Search" data-tab-content>
+            <form name="myForm" id="myForm" style="text-align:center;display:inline-block;margin-left:auto;margin-right:auto;margin-top:10px;background-color:#F3F3F3;
+                        height: 160px;width:100%;border-radius: 2px">
+                </br>
+                Keyword
+                <span style="color: red">*</span>&nbsp;&nbsp;
+                <input type="text" name="query" id="query" class="txt1" placeholder="" required> &nbsp;&nbsp; From
+                <span style="color: red">*</span>&nbsp;&nbsp;
+                <input type="date" name="fromparam" id="fromparam" placeholder="" required> &nbsp;&nbsp; To
+                <span style="color: red">*</span>&nbsp;&nbsp;
+                <input type="date" name="to" id="to" placeholder="" required>
+                <br/>
+                </br/>Category&nbsp;
+                <select name="category" id="category" onchange=setSource(this)>
+                    <option value="all">all</option>
+                    <option value="Business">Business</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="General">General</option>
+                    <option value="Health">Health</option>
+                    <option value="Science">Science</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Technology">Technology</option>
+                </select>&nbsp;&nbsp; Source&nbsp;
+                <select name="sources" id="sources" placeholder="" required>
+                    <option value='all'>all</option>
+                </select>
+                <br/>
+                <br/>
+                <button type="submit" class="green btn">Search</button>&nbsp;&nbsp;
+                <button name="clearbutton" id="clearbutton" class="green btn" onclick="clearform()">
+                    Clear
+                </button>
+            </form>
+            <div id="result" style="background-color:white;">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    window.onload = start
+
+    function start() {
+        document.getElementById("gbtn").click();
+    };
+
+
+    function callmaingetimg() {
+        let xhr = new XMLHttpRequest();
+        let url = "/maingetimg";
+        xhr.open("GET", url, true);
+        var imghtml = ""
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var imgarray = []
+                var imgContent = []
+                var imgTitle = []
+                var imghref = []
+                var i = 0
+                var time = 4000
+                let t = []
+                t = JSON.parse(this.response).output3["articles"]
+                let countgeneral = 0
+                for (i = 0; i < t.length; i++) {
+                    if (countgeneral == 5) {
+                        changeImg()
+                        break;
+                    }
+                    if (t[i]["author"] && t[i]["description"] && t[i]["publishedAt"] && t[i]["source"] && t[i]["source"].name && t[i]["title"] && t[i]["url"] && t[i]["urlToImage"]
+                        && t[i]["author"] != 'null' && t[i]["description"] != 'null' && t[i]["publishedAt"] != 'null' && t[i]["source"] != 'null' && t[i]["source"].name != 'null' && t[i]["title"] != 'null' && t[i]["url"] != 'null' && t[i]["urlToImage"] != 'null' && countgeneral < 5) {
+                        imgarray.push(t[i]["urlToImage"]);
+                        imgTitle.push(t[i]["title"])
+                        imgContent.push(t[i]["description"])
+                        imghref.push(t[i]["url"])
+                        countgeneral += 1
+                    }
+                }
+
+                setTimeout(changeImg, 0)
+                function changeImg() {
+                    document.slide.src = imgarray[i]
+                    document.getElementById("hhh").innerHTML = imgTitle[i]
+                    document.getElementById("ppp").innerHTML = imgContent[i]
+                    document.getElementById("anc").href = imghref[i]
+                    if (i < imgarray.length - 1) {
+                        i += 1
+                    }
+                    else {
+                        i = 0
+                    }
+                    setTimeout(changeImg, time)
+                }
+            }
+        }; xhr.send();
+    }
+    function callWordCloud() {
+        let xhr = new XMLHttpRequest();
+        let url = "/wordcloudd3";
+        xhr.open("GET", url, true);
+        //var imghtml = ""
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var myWords = []
+                let arr = JSON.parse(this.response)["res"]
+                for (i = 0; i < arr.length; i++) {
+                    myWords.push({ word: arr[i][0], size: arr[i][1] })
+                }
+                // set the dimensions and margins of the graph
+                var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+                    width = 300 - margin.left - margin.right,
+                    height = 276 - margin.top - margin.bottom;
+
+                // append the svg object to the body of the page
+                var svg = d3.select("#wordcloudd3").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+                var layout = d3.layout.cloud()
+                    .size([width, height])
+                    .words(myWords.map(function (d) { return { text: d.word, size: d.size }; }))
+                    .padding(5)        //space between words
+                    .rotate(function () { return ~~(Math.random() * 2) * 90; })
+                    .fontSize(function (d) { return d.size * 15; })      // font size of words
+                    .on("end", draw);
+                layout.start();
+
+                function draw(words) {
+                    svg
+                        .append("g")
+                        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+                        .selectAll("text")
+                        .data(words)
+                        .enter().append("text")
+                        .style("font-size", function (d) { return d.size + "px"; })
+                        .style("fill", "#000000")
+                        .attr("text-anchor", "middle")
+                        .style("font-family", "Impact")
+                        .attr("transform", function (d) {
+                            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                        })
+                        .text(function (d) { return d.text; });
+                }
+            }
+        }
+        xhr.send()
+    }
+    function funcactive1(ele) {
+        ele.className = "green visited";
+        ele.nextElementSibling.className
+            = "green";
+        callmaingetimg();
+        callWordCloud()
+        let xhr = new XMLHttpRequest(); let url = "/mainget"; xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var htmlcontfox = "";
+                var htmlcontcnn = "";
+                let countdivfox = 0;
+                let countdivcnn = 0;
+                let t = []
+                t = JSON.parse(this.response).output2["articles"]
+                for (i = 0; i < t.length; i++) {
+                    if (countdivfox == 4) { break; } if (t[i]["author"] && t[i]["description"] && t[i]["publishedAt"] && t[i]["source"] && t[i]["source"].name && t[i]["title"] && t[i]["url"] && t[i]["urlToImage"]
+                        && t[i]["author"] != 'null' && t[i]["description"] != 'null' && t[i]["publishedAt"] != 'null' && t[i]["source"] != 'null' && t[i]["source"].name != 'null' && t[i]["title"] != 'null' && t[i]["url"] != 'null' && t[i]["urlToImage"] != 'null' && countdivfox < 4) {
+                        if (t[i][
+                            "source"].name == "Fox News") {
+                            htmlcontfox += "<div class='card2'><a target='_blank' href='" + t[i]["url"] + "'>" + "<img align = 'center' src = '" + t[i][
+                                "urlToImage"] + "' alt = 'Avatar' >" + "<div class='container2'><h4><b>" + t[i]["title"] + "</b></h4><p>" + t[i][
+                                "description"] + "</p></div></a></div>&nbsp;&nbsp;"; countdivfox += 1
+                        }
+                    }
+                } for (i = 0; i < t.length; i++) {
+                    if (countdivcnn == 4
+                    ) { break; } if (t[i]["author"] && t[i]["description"] && t[i]["publishedAt"] &&
+                        t[i]["source"] && t[i]["source"].name && t[i]["title"] && t[i]["url"] && t[i]["urlToImage"]
+                        && t[i]["author"] != 'null' && t[i]["description"] != 'null' && t[i]["publishedAt"] != 'null' && t[i]["source"] != 'null' && t[i]["source"].name != 'null' && t[i]["title"] != 'null' && t[i]["url"] != 'null' && t[i]["urlToImage"] != 'null' && countdivcnn < 4) {
+                        if (t[i]["source"].name == "CNN"
+                        ) {
+                            htmlcontcnn += "<div class='card2'><a target='_blank'  href='" + t[i]["url"] + "'><img align='center' src='" + t[i]["urlToImage"] +
+                                "' alt = 'Avatar'>" + "<div class='container2'><h4><b>" + t[i]["title"] + "</b></h4><p>" + t[i]["description"] +
+                                "</p></div></a></div>&nbsp;&nbsp;"; countdivcnn += 1
+                        }
+                    }
+                } document.querySelector(".seconddiv").innerHTML = htmlcontcnn; document.querySelector(
+                    ".thirddiv").innerHTML = htmlcontfox;
+            }
+        }; xhr.send();
+    } function funcactive2(ele) {
+        var date1 = new Date();
+        document.getElementById("fromparam").valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()) - (6.04e+8));;
+        document.getElementById("to").valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()))
+
+
+        d3.select("svg").remove();
+        ele.previousElementSibling.className = "green"
+            ; ele.className = "green visited"
+    } const tabs = document.querySelectorAll('[data-tab-target]');
+    const tabContents = document.querySelectorAll('[data-tab-content]'); tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault(); const target = document.querySelector(tab.dataset.tabTarget)
+            tabContents.forEach(tabContent => { tabContent.classList.remove('active'); }); tabs.forEach(tab => {
+                tab.classList.remove('active')
+            });
+            tab.classList.add('active'); target.classList.add('active');
+        })
+    })
+    function clearform() {
+        document.getElementById("myForm").reset(); var date1 = new Date();
+
+        document.getElementById("fromparam").valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()) - (6.04e+8));;
+        document.getElementById("to").valueAsDate = new Date(Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()))
+        var searchEles = document.getElementById("result").children
+        let index;
+        for (var i = 0; i < searchEles.length; i++) {
+            if (searchEles[i].tagName == 'BR' || searchEles[i].tagName == 'H3') {
+                searchEles[i].remove();
+            }
+        }
+        var node = document.getElementById("firstfive")
+        if (node != null) {
+            node.parentElement.removeChild(node)
+        } var node2 = document.getElementById("lastten")
+        if (node2 != null) {
+            node2.parentElement.removeChild(node2)
+        }
+    } function
+        setSource(sel) {
+        let sources = document.querySelector('#sources'); let category = document.querySelector('#category');
+        if (sel.value == "all") {
+            sources.innerHTML = "<option value = 'all' > all</option >"; return
+        } let url = "/sourcesget?query=" + sel.value; let text1 = ""; let xhr =
+            new XMLHttpRequest(); xhr.open("GET", url, true); xhr.onreadystatechange = function () {
+                if (xhr.readyState
+                    === 4 && xhr.status === 200) {
+                    arrname = [];
+                    arrid = [];
+                    arrname = JSON.parse(this.response)["name"];
+                    arrid = JSON.parse(this.response)["id"];
+
+                    for (i = 0; i < arrid.length && i < 10; i++) { text1 += "<option value='" + arrid[i] + "'>" + arrname[i] + "</option>"; } sources.innerHTML = "<option value='all'>all</option>" + text1;
+                };
+            }
+        xhr.send();
+    }
+    document.querySelector("#myForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var searchEles = document.getElementById("result").children
+        let index;
+        for (var i = 0; i < searchEles.length; i++) {
+            if (searchEles[i].tagName == 'BR' || searchEles[i].tagName == 'H3') {
+                searchEles[i].remove();
+            }
+        }
+        var node = document.getElementById("firstfive")
+        if (node != null) {
+            node.parentElement.removeChild(node)
+        } var node2 = document.getElementById("lastten")
+        if (node2 != null) {
+            node2.parentElement.removeChild(node2)
+        } let query = document.querySelector('#query');
+        let fromparam = document.querySelector(
+            '#fromparam');
+        let text1 = ""; let sources = document.querySelector('#sources'); let to = document.querySelector('#to');
+        if (Date.parse(to.value) < Date.parse(fromparam.value)) {
+            alert("incorrect time"); return false;
+        }
+        let category = document.querySelector('#category');
+        let xhr = new XMLHttpRequest();
+        let url = "/processget?query="
+            + query.value + "&from_param=" + fromparam.value + "&sources=" + sources.value + "&to=" + to.value;
+        xhr.open("GET", url, true); xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.responseType = 'json';
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4
+                && xhr.status === 200) {
+                if (this.response.hasOwnProperty('output')) {
+                    if (this.response.output.articles.length != 0) {
+                        function funcnextdiv() {
+                            lastten.style.display = "block";
+                            result.appendChild(lastten)
+                            firstfivebtn.style.display = 'none';
+                            for (var i = 5; i < 15; i++) {
+                                window.scrollTo(0, document.body.scrollHeight);
+                                if (i >= arrayElements.length) { break; } if (i
+                                    < arrayElements.length) {
+                                    linebreak = document.createElement("br"); var element = createElement(arrayElements[i]); lastten.appendChild(element);
+                                    lastten.appendChild(linebreak); lastten.appendChild(linebreak)
+                                }
+                            } lasttenbtn.style.display = 'block'
+                                ; lastten.appendChild(lasttenbtn)
+                        } function hidenextdiv() {
+                            lastten.style.display = "none"; firstfive.style.display = "block"
+                                ; lasttenbtn.style.display = "none";
+                            firstfivebtn.style.display = "block"
+                        } var arrayElements = [];
+                        var firstfive = createElement("<div id='firstfive' style: 'display:none;'></div>");
+                        var lastten = createElement("<div id='lastten' style:'display:none'></div>");
+                        var firstfivebtn = createElement(
+                            "<button id='firstfivebtn' class='green btn' style='display:none; margin: 0 auto; width: 150px;padding: 10px 10px;'>Show More</button>"); var lasttenbtn = createElement(
+                                "<button id='lasttenbtn' class='green btn' style='display:none; margin: 0 auto; width: 150px;padding: 10px 10px;'>Show Less</button>"); var result = document.getElementById("result");
+                        firstfivebtn.onclick = funcnextdiv;
+                        lasttenbtn.onclick = hidenextdiv;
+                        let t = []; t = this.response.output.articles;
+                        for (i = 0; i < this.response.output.articles.length; i++) {
+                            if (t[i]["author"] && t[i]["description"] && t[i]["publishedAt"]
+                                && t[i]["source"] && t[i]["source"].name && t[i]["title"] && t[i]["url"] && t[i]["urlToImage"]
+                                && t[i]["author"] != 'null' && t[i]["description"] != 'null' && t[i]["publishedAt"] != 'null' && t[i]["source"] != 'null' && t[i]["source"].name != 'null' && t[i]["title"] != 'null' && t[i]["url"] != 'null' && t[i]["urlToImage"] != 'null') {
+
+                                var desc = t[i]["description"];
+                                var maxLength = 95
+                                if (desc.length > 95) {
+                                    var stringtrim = ""
+                                    if (desc.length > stringtrim.length) {
+                                        var stringtrim = desc.substr(0, maxLength + 1);
+                                        stringtrim = stringtrim.substr(0, Math.min(stringtrim.length, stringtrim.lastIndexOf(" ")))
+                                        stringtrim += "..."
+                                    }
+                                }
+                                else {
+                                    stringtrim = desc
+                                }
+                                arrayElements.push(
+                                    "<div class='card'>" + "<button style='font-size: 15px;' class='container collapsible' onclick=func(this)><p class='para'><img src='" + t[i][
+                                    "urlToImage"] + "' alt = 'Avatar'></p><div><h4><b>" + t[i]["title"] + "</b></h4><p>" + stringtrim
+                                    + "</p></div></button>" + "<div class='content'><p class='para'><img src='" + t[i][
+                                    "urlToImage"] + "' alt='Avatar'></p>" + "<div><h4><b>" + t[i]["title"] +
+                                    "</b></h4><p><b>Author:&nbsp;</b>" + t[i]["author"] + "<p/>" +
+                                    "<p><b>Source:&nbsp;</b>" + t[i]["source"]["name"] + "<p/>" +
+                                    "<p><b>Date:&nbsp;</b>" + new Date(t[i]["publishedAt"]).toLocaleDateString() + "<p/><p>" + t[i]["description"] +
+                                    "<p/><a target='_blank' href='" + t[i]["url"] + "'><b>See Original post</a></b></p></div>" +
+                                    "<span style='margin-top:0px margin-right:0px;cursor:pointer' onclick= func1(this.parentElement) >&#10799;</span >" + "</div></div>")
+                            }
+                        }
+                        if (arrayElements.length == 0) {
+                            var result = document.getElementById("result")
+                            result.innerHTML = "<h3 align='center'>No results</h3>"
+                            return
+                        }
+                        let flag = 0; linebreak = document.createElement("br"); firstfive.style.display = "block"
+                        result.appendChild(linebreak);
+                        result.appendChild(firstfive);
+                        for (var i = 0; i < 5; i++) {
+                            window.scrollTo(0,
+                                document.body.scrollHeight); if (i >= arrayElements.length) { flag = 1 } if (i
+                                    < arrayElements.length) {
+                                linebreak = document.createElement("br"); var element = createElement(arrayElements[i]); firstfive.appendChild(element);
+                                firstfive.appendChild(linebreak); firstfive.appendChild(linebreak)
+                            }
+                        } if (flag == 0 && arrayElements.length > 5) {
+                            firstfivebtn.style.display = 'block'
+                                ; firstfive.appendChild(firstfivebtn)
+                        }
+                    }
+                    else {
+                        var result = document.getElementById("result")
+                        result.innerHTML = "<h3 align='center'>No results</h3>"
+                    }
+                }
+                else if (this.response.hasOwnProperty('erroroutput')) {
+                    alert(this.response.erroroutput[0].message)
+                    return
+                }
+            }
+        }
+        xhr.send();
+    });
+    function createElement(stringaa) {
+        var d = document.createElement('div'); d.innerHTML = stringaa + "<br/><br/>"; return d.firstChild;
+    } function func(ele) {
+        var content = ele.nextElementSibling; content.style.display = "flex"
+            ; ele.style.display = 'none'
+    } function func1(ele) {
+        var content = ele.previousElementSibling;
+        ele.style.display = "none"; content.style.display = "flex";
+    } </script>
