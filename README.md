@@ -1,5 +1,5 @@
 **<h1>NewsAppp_Python_Flask</h1>**
-Reference Solution: http://flaskshashank-env.eba-cc7bpudg.us-east-1.elasticbeanstalk.com/
+Reference Solution: http://flaskk-env.eba-4pepeymm.us-east-1.elasticbeanstalk.com/
 **<h1>Overview</h1>**
 Users can read top headlines provided by the Google News API along with specific headlines from CNN and Fox News. The top headlines are displayed in a sliding format. The top headlines fromCNN and Fox News re displayed in a card format. A word cloud for frequently used words is displayed.
 Also User can search from the search tab that shows upto 15 top news (maximum) results based on input provided. 
